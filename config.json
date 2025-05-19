@@ -1,1 +1,6 @@
-{\n  "target_url": "",\n  "mode": "normal",\n  "payload_count": 15,\n  "enable_fallback": true\n}
+{
+  "target_url": "https://juice-shop.herokuapp.com",
+  "mode": "normal",
+  "payload_count": 15,
+  "enable_fallback": true
+}
