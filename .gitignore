@@ -1,7 +1,9 @@
-# ShadowOS8
+
+*.pyc
+.env
 __pycache__/
+.env
 logs/
 output/
 reports/
-*.pyc
-.env
+missions/

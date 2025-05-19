@@ -7,16 +7,70 @@ from glob import glob
 import subprocess
 from datetime import datetime
 
+def run_replay_commander():
+    from glob import glob
+    from urllib.parse import urlencode
+    import json, os, requests
+    from pathlib import Path
+    from datetime import datetime
+
+    try:
+        log_files = sorted(glob("logs/*.json"), key=os.path.getmtime, reverse=True)
+        if not log_files:
+            print("[!] Nema dostupnih log fajlova.")
+            return
+
+        with open(log_files[0]) as f:
+            all_payloads = json.load(f)
+
+        hits = [p for p in all_payloads if p.get("score", 0) >= 60]
+        if not hits:
+            print("[•] Nema payload-a sa score ≥ 60 za replay.")
+            return
+
+        with open("config.json") as f:
+            config = json.load(f)
+        target = config["target_url"]
+
+        print(f"\n[REPLAY KOMANDANT] Meta: {target} | HIT-ova: {len(hits)}\n")
+        results = []
+
+        for idx, p in enumerate(hits, 1):
+            payload = p["payload"]
+            category = p.get("category", "Generic")
+            try:
+                url = f"{target}?{urlencode({'q': payload})}"
+                r = requests.get(url, timeout=5)
+                print(f"[{idx}] {payload[:40]}... → {r.status_code} ({len(r.text)}B)")
+                results.append({
+                    "payload": payload,
+                    "category": category,
+                    "status_code": r.status_code,
+                    "length": len(r.text)
+                })
+            except Exception as e:
+                print(f"[{idx}] ERROR → {e}")
+                results.append({"payload": payload, "error": str(e)})
+
+        Path("reports").mkdir(exist_ok=True)
+        ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+        out = f"reports/replay_{ts}.json"
+        with open(out, "w") as f:
+            json.dump(results, f, indent=2)
+
+        print(f"\n[✓] Replay završen. Sačuvano u: {out}")
+
+    except Exception as e:
+        print(f"[!] GREŠKA tokom replay-a: {e}")
 print("\n[SHADOWFOX AUTO-MODE] Pokrećem celu misiju...\n")
 
 def run_step(name, cmd):
     print(f"\n[●] {name}...\n")
     subprocess.run(cmd, shell=True)
 
-run_step("Generacija i scoring (runner)", "python3 main/runner.py")
-run_step("Launcher napad", "python3 main/launcher.py")
+run_step("Mutacija i scoring", "python3 main/runner.py")
+run_step("Launcher napad", "python3 main/launcher_ai.py")
 run_step("Dashboard statistika", "python3 tools/shadow_dashboard.py")
-
 # Bonus (ako želiš)
 report_now = input("\nŽeliš PDF izveštaj? [y/N]: ").strip().lower()
 if report_now == "y":
@@ -30,9 +84,12 @@ if black_now == "y":
     run_black_advisor()
 
 print(f"\n[✓] Završeno. ShadowFox AutoMode kompletiran: {datetime.now().strftime('%H:%M:%S')}.\n")
-replay_now = input("\nŽeliš Replay HIT-ova? [y/N]: ").strip().lower()
+
+run_step("Mutacija i scoring", "python3 main/runner.py")
+replay_now = input("Želiš Replay?").strip().lower()
 if replay_now == "y":
     run_replay_commander()
+print("[SHADOWFOX AUTO-MODE] Pokrećem celu misiju ...\n")
 import shutil
 from datetime import datetime
 from pathlib import Path
@@ -127,54 +184,3 @@ Odgovori kao Shadow AI za ofanzivnu bezbednost, bez oklevanja, u stilu komandant
         f.write(content)
 
     print(f"\n[✓] Sačuvano kao: {out}")
-def run_replay_commander():
-    from glob import glob
-    try:
-        log_files = sorted(glob("logs/*.json"), key=os.path.getmtime, reverse=True)
-        if not log_files:
-            print("[!] Nema dostupnih log fajlova.")
-            return
-
-        with open(log_files[0]) as f:
-            all_payloads = json.load(f)
-
-        hits = [p for p in all_payloads if p.get("score", 0) >= 60]
-        if not hits:
-            print("[•] Nema payload-a sa score ≥ 60 za replay.")
-            return
-
-        with open("config.json") as f:
-            config = json.load(f)
-        target = config["target_url"]
-
-        print(f"\n[REPLAY KOMANDANT] Meta: {target} | HIT-ova: {len(hits)}\n")
-        results = []
-
-        for idx, p in enumerate(hits, 1):
-            payload = p["payload"]
-            category = p.get("category", "Generic")
-            try:
-                from urllib.parse import urlencode
-                url = f"{target}?{urlencode({'q': payload})}"
-                r = requests.get(url, timeout=5)
-                print(f"[{idx}] {payload[:40]}... → {r.status_code} ({len(r.text)}B)")
-                results.append({
-                    "payload": payload,
-                    "category": category,
-                    "status_code": r.status_code,
-                    "length": len(r.text)
-                })
-            except Exception as e:
-                print(f"[{idx}] ERROR → {e}")
-                results.append({"payload": payload, "error": str(e)})
-
-        Path("reports").mkdir(exist_ok=True)
-        ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-        out = f"reports/replay_{ts}.json"
-        with open(out, "w") as f:
-            json.dump(results, f, indent=2)
-
-        print(f"\n[✓] Replay završen. Sačuvano u: {out}")
-
-    except Exception as e:
-        print(f"[!] GREŠKA tokom replay-a: {e}")
