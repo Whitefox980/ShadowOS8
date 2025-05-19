@@ -6,9 +6,14 @@ import json, os
 from glob import glob
 import subprocess
 from datetime import datetime
+from rich.console import Console
+console = Console()
 
 def set_target_url():
     target = input("Enter target URL (e.g., https://target.com): ").strip()
+    if not target.startswith("http"):
+        target = "https://" + target
+
     with open("config.json", "w") as f:
         json.dump({"target_url": target}, f)
     print(f"[✓] Target set to: {target}")
@@ -122,6 +127,24 @@ Odgovori kao Shadow AI za ofanzivnu bezbednost, bez oklevanja, u stilu komandant
 
     print(f"\n[✓] Sačuvano kao: {out}")
 
+def run_shadow_monitor():
+    import subprocess
+    from glob import glob
+    import os
+    import time
+    time.sleep(2)
+
+    files = sorted(glob("reports/launcher_ai_*.json"), key=os.path.getmtime, reverse=True)
+    if not files:
+        print("[!] No launcher_ai logs found.")
+        return
+
+    latest_log = files[0]
+    if os.path.getsize(latest_log) < 100:
+        print("[!] Log file too small, skipping ShadowMonitor.")
+        return
+
+    subprocess.run("python3 tools/shadow_monitor.py", shell=True)
 def run_poc_report():
     import subprocess
     print("\n[●] Generating PoC report...")
@@ -148,8 +171,17 @@ set_target_url()
 run_step("Mutacija i scoring", "python3 main/runner.py")
 run_step("Launcher napad", "python3 main/launcher_ai.py")
 run_step("Dashboard statistika", "python3 tools/shadow_dashboard.py")
-run_step("Monitoring odgovora", "python3 tools/shadow_monitor.py")
 
+
+run_step("Monitoring odgovora", "python3 tools/shadow_monitor.py")
+def run_xss_mutation_gen():
+    import subprocess
+    subprocess.run("python3 tools/xss_mutation_gen.py", shell=True)
+
+# Pitanje korisniku:
+mutation_now = input("\nDo you want to generate XSS mutation payloads? [y/N]: ").strip().lower()
+if mutation_now == "y":
+    run_xss_mutation_gen()
 # Bonus (ako želiš)
 report_now = input("\nŽeliš PDF izveštaj? [y/N]: ").strip().lower()
 if report_now == "y":
@@ -179,7 +211,17 @@ run_step("Mutacija i scoring", "python3 main/runner.py")
 replay_now = input("Želiš Replay?").strip().lower()
 if replay_now == "y":
     run_replay_commander()
+console.print("\n[●] Aktiviram ShadowRecon izviđača...", style="bold cyan")
+os.system("python3 agents/agent_mapper.py")
 print("[SHADOWFOX AUTO-MODE] Pokrećem celu misiju ...\n")
+# === AGENT X: FINALNA FAZA ===
+use_agentx = input("\nŽeliš da aktiviraš AgentX napad? [y/N]: ").strip().lower()
+if use_agentx == "y":
+    console.print("[●] Pokrećem AgentX završni napad...", style="bold red")
+    os.system("python3 agents/agentx.py")
+# === LogicFuzzer faza: test auth bypass i IDOR ===
+console.print("\n[●] Pokrećem LogicFuzzer za test poslovne logike...", style="bold cyan")
+os.system("python3 agents/logic_fuzzer.py")
 
 poc_now = input("\nDo you want to generate a PoC report? [y/N]: ").strip().lower()
 if poc_now == "y":
