@@ -1,0 +1,6 @@
+# ShadowOS8
+__pycache__/
+logs/
+output/
+reports/
+*.pyc
