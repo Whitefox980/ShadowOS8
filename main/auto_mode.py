@@ -64,6 +64,14 @@ def run_replay_commander():
         print(f"[!] GREŠKA tokom replay-a: {e}")
 print("\n[SHADOWFOX AUTO-MODE] Pokrećem celu misiju...\n")
 
+def run_poc_report():
+    import subprocess
+    print("\n[●] Generating PoC report...")
+    subprocess.run("python3 tools/poc_generator.py", shell=True)
+def run_shadowchain():
+    import subprocess
+    print("\n[●] ShadowChain sekvencijalni napad...")
+    subprocess.run("python3 tools/shadow_chain.py", shell=True)
 def run_step(name, cmd):
     print(f"\n[●] {name}...\n")
     subprocess.run(cmd, shell=True)
@@ -71,6 +79,8 @@ def run_step(name, cmd):
 run_step("Mutacija i scoring", "python3 main/runner.py")
 run_step("Launcher napad", "python3 main/launcher_ai.py")
 run_step("Dashboard statistika", "python3 tools/shadow_dashboard.py")
+run_step("Monitoring odgovora", "python3 tools/shadow_monitor.py")
+
 # Bonus (ako želiš)
 report_now = input("\nŽeliš PDF izveštaj? [y/N]: ").strip().lower()
 if report_now == "y":
@@ -79,10 +89,15 @@ if report_now == "y":
 advisor_now = input("\nŽeliš AI savet? [y/N]: ").strip().lower()
 if advisor_now == "y":
     run_step("AI Advisor", "python3 tools/ai_advisor.py")
+white_now = input("\nŽeliš belog savetnika? [y/N]: ").strip().lower()
+if white_now == "y":
+    run_white_advisor()
 black_now = input("\nŽeliš crnog savetnika? [y/N]: ").strip().lower()
 if black_now == "y":
     run_black_advisor()
-
+chain_now = input("\nŽeliš ShadowChain tok? [y/N]: ").strip().lower()
+if chain_now == "y":
+    run_shadowchain()
 print(f"\n[✓] Završeno. ShadowFox AutoMode kompletiran: {datetime.now().strftime('%H:%M:%S')}.\n")
 
 run_step("Mutacija i scoring", "python3 main/runner.py")
@@ -90,6 +105,11 @@ replay_now = input("Želiš Replay?").strip().lower()
 if replay_now == "y":
     run_replay_commander()
 print("[SHADOWFOX AUTO-MODE] Pokrećem celu misiju ...\n")
+
+poc_now = input("\nDo you want to generate a PoC report? [y/N]: ").strip().lower()
+if poc_now == "y":
+    run_poc_report()
+
 import shutil
 from datetime import datetime
 from pathlib import Path
@@ -136,6 +156,10 @@ def launch_frontgate():
     os.system(f"python3 -m http.server {port}")
 launch_frontgate()
 
+def run_white_advisor():
+    import subprocess
+    print("\n[●] Aktiviram belog savetnika...")
+    subprocess.run("python3 tools/white_shadow_advisor.py", shell=True)
 def run_black_advisor():
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
