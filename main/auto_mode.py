@@ -7,6 +7,11 @@ from glob import glob
 import subprocess
 from datetime import datetime
 
+def set_target_url():
+    target = input("Enter target URL (e.g., https://target.com): ").strip()
+    with open("config.json", "w") as f:
+        json.dump({"target_url": target}, f)
+    print(f"[✓] Target set to: {target}")
 def run_replay_commander():
     from glob import glob
     from urllib.parse import urlencode
@@ -62,12 +67,76 @@ def run_replay_commander():
 
     except Exception as e:
         print(f"[!] GREŠKA tokom replay-a: {e}")
-print("\n[SHADOWFOX AUTO-MODE] Pokrećem celu misiju...\n")
+    print("\n[SHADOWFOX AUTO-MODE] Pokrećem celu misiju...\n")
+
+def run_white_advisor():
+    import subprocess
+    print("\n[●] Aktiviram belog savetnika...")
+    subprocess.run("python3 tools/white_shadow_advisor.py", shell=True)
+def run_black_advisor():
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        print("[!] OPENAI_API_KEY nije postavljen.")
+        return
+
+    client = OpenAI(api_key=api_key)
+
+    logs = sorted(glob("reports/launcher_ai_*.json"), key=os.path.getmtime, reverse=True)
+    if not logs:
+        print("[!] Nema AI launcher logova.")
+        return
+
+    with open(logs[0]) as f:
+        data = json.load(f)
+
+    top = sorted(data, key=lambda x: x.get("length", 0), reverse=True)[:5]
+    summary = "\n".join([f"- {x['payload']} | status: {x.get('status_code', '??')} | mode: {x.get('mode', 'query')}" for x in top])
+
+    prompt = f"""
+Evo izlaza iz napada AI Launcher-a:
+
+{summary}
+
+Na osnovu toga:
+1. Predloži strategiju kako da izvedemo sledeći napad (više faza, evasion, chaining)
+2. Koji mod koristiti za jači efekat (query, header, cookie)
+3. Daj primer sledeće generacije payload-a koji zaobilaze detekciju
+
+Odgovori kao Shadow AI za ofanzivnu bezbednost, bez oklevanja, u stilu komandanta.
+"""
+
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.5
+    )
+
+    content = response.choices[0].message.content
+    print("\n[BLACK SHADOW ADVISOR REPORT]\n")
+    print(content)
+
+    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+    out = f"reports/black_advisor_{ts}.txt"
+    with open(out, "w") as f:
+        f.write(content)
+
+    print(f"\n[✓] Sačuvano kao: {out}")
 
 def run_poc_report():
     import subprocess
     print("\n[●] Generating PoC report...")
     subprocess.run("python3 tools/poc_generator.py", shell=True)
+def run_waf_analyzer():
+    import subprocess
+    subprocess.run("python3 tools/waf_analyzer.py", shell=True)
+def set_target_url():
+    target = input("Enter target URL (e.g., https://target.com): ").strip()
+    with open("config.json", "w") as f:
+        json.dump({"target_url": target}, f)
+    print(f"[✓] Target set to: {target}")
+def run_anomaly_trigger():
+    import subprocess
+    subprocess.run("python3 tools/anomaly_trigger.py", shell=True)
 def run_shadowchain():
     import subprocess
     print("\n[●] ShadowChain sekvencijalni napad...")
@@ -75,7 +144,7 @@ def run_shadowchain():
 def run_step(name, cmd):
     print(f"\n[●] {name}...\n")
     subprocess.run(cmd, shell=True)
-
+set_target_url()
 run_step("Mutacija i scoring", "python3 main/runner.py")
 run_step("Launcher napad", "python3 main/launcher_ai.py")
 run_step("Dashboard statistika", "python3 tools/shadow_dashboard.py")
@@ -86,6 +155,12 @@ report_now = input("\nŽeliš PDF izveštaj? [y/N]: ").strip().lower()
 if report_now == "y":
     run_step("PDF Report", "python3 tools/shadow_reporter.py")
 
+anomaly_now = input("\nDo you want to scan for anomalous payload behavior? [y/N]: ").strip().lower()
+if anomaly_now == "y":
+    run_anomaly_trigger()
+waf_now = input("\nDo you want to analyze WAF response behavior? [y/N]: ").strip().lower()
+if waf_now == "y":
+    run_waf_analyzer()
 advisor_now = input("\nŽeliš AI savet? [y/N]: ").strip().lower()
 if advisor_now == "y":
     run_step("AI Advisor", "python3 tools/ai_advisor.py")
@@ -156,55 +231,3 @@ def launch_frontgate():
     os.system(f"python3 -m http.server {port}")
 launch_frontgate()
 
-def run_white_advisor():
-    import subprocess
-    print("\n[●] Aktiviram belog savetnika...")
-    subprocess.run("python3 tools/white_shadow_advisor.py", shell=True)
-def run_black_advisor():
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        print("[!] OPENAI_API_KEY nije postavljen.")
-        return
-
-    client = OpenAI(api_key=api_key)
-
-    logs = sorted(glob("reports/launcher_ai_*.json"), key=os.path.getmtime, reverse=True)
-    if not logs:
-        print("[!] Nema AI launcher logova.")
-        return
-
-    with open(logs[0]) as f:
-        data = json.load(f)
-
-    top = sorted(data, key=lambda x: x.get("length", 0), reverse=True)[:5]
-    summary = "\n".join([f"- {x['payload']} | status: {x.get('status_code', '??')} | mode: {x.get('mode', 'query')}" for x in top])
-
-    prompt = f"""
-Evo izlaza iz napada AI Launcher-a:
-
-{summary}
-
-Na osnovu toga:
-1. Predloži strategiju kako da izvedemo sledeći napad (više faza, evasion, chaining)
-2. Koji mod koristiti za jači efekat (query, header, cookie)
-3. Daj primer sledeće generacije payload-a koji zaobilaze detekciju
-
-Odgovori kao Shadow AI za ofanzivnu bezbednost, bez oklevanja, u stilu komandanta.
-"""
-
-    response = client.chat.completions.create(
-        model="gpt-4o",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.5
-    )
-
-    content = response.choices[0].message.content
-    print("\n[BLACK SHADOW ADVISOR REPORT]\n")
-    print(content)
-
-    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-    out = f"reports/black_advisor_{ts}.txt"
-    with open(out, "w") as f:
-        f.write(content)
-
-    print(f"\n[✓] Sačuvano kao: {out}")

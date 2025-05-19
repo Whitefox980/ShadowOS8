@@ -1,6 +1,1 @@
-{
-  "target_url": "https://juice-shop.herokuapp.com",
-  "mode": "normal",
-  "payload_count": 15,
-  "enable_fallback": true
-}
+{"target_url": "shop.whoop.com"}
