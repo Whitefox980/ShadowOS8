@@ -1,14 +1,21 @@
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import shutil
 import socket
 from pathlib import Path
 from openai import OpenAI
-import json, os
+import json
 from glob import glob
 import subprocess
 from datetime import datetime
 from rich.console import Console
-console = Console()
 
+
+# Dinamički preuzmi metu
+target = sys.argv[1] if len(sys.argv) > 1 else "https://geocode-beta.bykea.net"
+console = Console()
+auto_agentfuzz = True
 def set_target_url():
     target = input("Enter target URL (e.g., https://target.com): ").strip()
     if not target.startswith("http"):
@@ -160,6 +167,10 @@ def set_target_url():
 def run_anomaly_trigger():
     import subprocess
     subprocess.run("python3 tools/anomaly_trigger.py", shell=True)
+def activate_agentfuzz(target):
+    from agents.agentfuzz import run_agentfuzz
+    run_agentfuzz(target)
+
 def run_shadowchain():
     import subprocess
     print("\n[●] ShadowChain sekvencijalni napad...")
@@ -222,7 +233,8 @@ if use_agentx == "y":
 # === LogicFuzzer faza: test auth bypass i IDOR ===
 console.print("\n[●] Pokrećem LogicFuzzer za test poslovne logike...", style="bold cyan")
 os.system("python3 agents/logic_fuzzer.py")
-
+if auto_agentfuzz:
+    activate_agentfuzz(target)
 poc_now = input("\nDo you want to generate a PoC report? [y/N]: ").strip().lower()
 if poc_now == "y":
     run_poc_report()
